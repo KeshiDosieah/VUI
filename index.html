@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="main.css">
+        <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="https://kit.fontawesome.com/aec77653d6.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+        <title> StudyBot </title>
+    </head>
+    <body>
+        <div class="header">
+            <div class="logo">
+                <img src="logo.gif"  height="150vh" alt="Chatbot clipart">
+            </div>
+            <div class="text">
+                <h3> Study Bot</h3>
+                <p> Need help with programming, referencing ? </p>
+                <p> Talk with us by activating the microphone button</p>
+            </div>
+        </div>
+        <div class="container">
+            <div class="container-child">
+                <div class="mic">
+                    <button id="mic" class="micbtn"><i id="icon" class="fa-solid fa-microphone fa-2xl fa-duotone "></i></button>
+                </div>
+                <div id="messages" class="messages"></div>
+                <input id="input" type="text" placeholder="Type something..." autocomplete="off" autofocus="true" />
+            </div>
+            <div class="container-child">
+                <div class="info">
+                    <p>Information Panel</p>
+                </div>
+            </div>
+          </div>
+    </body>
+    <script src="main.js"></script>
+</html>
