@@ -1,32 +1,25 @@
 const utterances = [ 
-    ["how are you", "how is life", "how are things"],        //0
-    ["hi", "hey", "hello", "good morning", "good afternoon"],      //1
-    ["what are you doing", "what is going on", "what is up"],      //2
-    ["how old are you"],					//3
-    ["who are you", "are you human", "are you bot", "are you human or bot"]];
+    ["hi", "hey", "hello", "good morning", "good afternoon"],  
+    ["goodbye", "bye", "good bye"],
+    ["coding", "programming", "code", "programming languages"]
+  ];
+    
 
-const answers = [
-        ["Fine... how are you?", "Pretty well, how are you?", "Fantastic, how are you?"],                                                                                  	//0
-        [
-         "Hello!im anfjhdcgdcbgjjgnjjng hoowwwwwwwww abbbbbbbbb youuuuuuuu iiiiiii neddddddd tooooo knoooooowwwwwwwwwwww ttttttthannnkkkkk youuuuuuuuuuuuuuuu"
-       ],						//1
-       [
-         "Nothing much",
-         "About to go to sleep",
-         "Can you guess?",
-         "I don't know actually"
-       ],						//2
-       ["I am infinite"],					//3
-       ["I am just a bot", "I am a bot. What are you?"],	//4
-       
-      
-     ];
+const answers = [                                                                               
+    ["Hello! I am here to guide you on your programming, academic writing and time management endevours. Find the information button on the right to get you started.", "Hey, how can I assist you? Look for the list of commands by clicking the information button on the right.", "Hi there! How may I be of assistance? Find the list of things I can help you with on the right."],						//1
+    ["Bye. See you later.", "Goodbye. See you soon."],
+    ["Please find the list of programming languages on the right. Get started by selecting one.", "Choose one of the programming languages on the right to get started."]					
+  ];
 
 const alternatives = [
-        "Go on...",
-        "Try again",
+        "Unfortunately, I could not understand your command. See the list of commands using the information button on the right.",
+        "Try again with the list of commands listed in the information button on the right",
       ];
 
+
+const programming=[{"name": "Java", "image":"java.png"},
+                   {"name": "Python", "image":"python.png"},
+                   {"name": "Javascript", "image":"javascript.png"}];
 
 let speech = new SpeechSynthesisUtterance();
 speech.volume=1;
@@ -102,14 +95,17 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   
   function compare(utterancesArray, answersArray, string) {
+    console.log("compare");
     let reply;
     let replyFound = false;
+    let index = 0;
     for (let x = 0; x < utterancesArray.length; x++) {
       for (let y = 0; y < utterancesArray[x].length; y++) {
-        if (utterancesArray[x][y] === string) {
+        if ((utterancesArray[x][y] === string) || string.includes(utterancesArray[x][y])){
           let replies = answersArray[x];
           reply = replies[Math.floor(Math.random() * replies.length)];
           replyFound = true;
+          index = x;
           break;
         }
       }
@@ -117,8 +113,10 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
       }
     }
+    displayInfo(index);
     return reply;
   }
+
   
   function addChatEntry(input, product) {
     const messagesContainer = document.getElementById("messages");
@@ -162,4 +160,41 @@ document.addEventListener("DOMContentLoaded", () => {
   
 
   }
+
+  function displayInfo(x){
+    const info = document.querySelector(".info");
+    info.innerHTML ="";
+    switch(x){
+      case 2:
+        displaybuttons(programming);
+        break;
+    }
+  }
   
+  function displaybuttons(buttonArray){
+    const info = document.querySelector(".info");
+    let container = document.createElement("div");
+    container.className = "programButton";
+    buttonArray.forEach(element => {
+      let slot =  document.createElement("div");
+      slot.className = "slot";
+      let img = document.createElement("img");
+      img.src = element.image;  
+      let lang = document.createElement("div");
+      lang.className = "langName";
+      let name = document.createElement("button");
+      name.innerHTML = element.name;
+      name.onclick = function(){
+        displayLink(element);};
+      lang.appendChild(name);
+      slot.appendChild(img);
+      slot.appendChild(lang);
+      container.appendChild(slot);
+    });
+    info.appendChild(container);
+  }
+
+  function displayLink(elem){
+    const info = document.querySelector(".info");
+    info.innerHTML =elem.name;
+  }
