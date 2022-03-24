@@ -241,6 +241,7 @@ input{
     font-weight: 400;
     font-size: medium;
     font-family: Arial, Helvetica, sans-serif;
+    
 }
 
 .langName button:hover{
@@ -310,121 +311,134 @@ input{
 }
 
 .modal {
-      align-items: centre;
-      display: none; /* Hidden by default */
-      position: fixed; /* Stay in place */
-      z-index: 1; /* Sit on top */
-      padding-top: 180px; /* Location of the box */
-      left: 0;
-      top: 0;
-      width: 100%; /* Full width */
-      height: 100%; /* Full height */
-      overflow: auto; /* Enable scroll if needed */
-      background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
-      border-radius: 10px;
+    align-items: centre;
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 180px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
+    border-radius: 10px;
     }
     
-    /* Modal Content */
-    .modal-content {
-        border-radius: 10px;
-        margin-right: 30px;
-      position: relative;
-      background-color: #fefefe;
-      float: right;
-      padding: 0;
-      border: 1px solid #888;
-      width: 45%;
-      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
-      -webkit-animation-name: animatetop;
-      -webkit-animation-duration: 0.4s;
-      animation-name: animatetop;
-      animation-duration: 0.4s
-    }
+/* Modal Content */
+.modal-content {
+    border-radius: 10px;
+    margin-right: 30px;
+    position: relative;
+    background-color: #fefefe;
+    float: right;
+    padding: 0;
+    border: 1px solid #888;
+    width: 45%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
     
-    /* Add Animation */
-    @-webkit-keyframes animatetop {
-      from {top:-300px; opacity:0} 
-      to {top:0; opacity:1}
-    }
-    
-    @keyframes animatetop {
-      from {top:-300px; opacity:0}
-      to {top:0; opacity:1}
-    }
-    
-    /* The Close Button */
-    .close {
-      color: white;
-      float: right;
-      font-size: 34px;
-      margin: 10px;
-      font-weight: bold;
-    }
-    
-    .close:hover,
-    .close:focus {
-      color: #000;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    
-    .modal-header {
-        text-align: center;
-        margin: 10px;
-        border-radius: 10px;
-      padding: 1px 10px;
-      background-color: rgb(20,78,110);
-      color: white;
-    }
-    
-    .modal-body {
-        text-align: center;
-        padding: 2px 16px;
-    }
-    
-    .modal-content p span{
-        font-weight: bold;
-    }
-/* 
-    #quiz{
-        display: block;
-        background-color: #000;
-    }
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0} 
+    to {top:0; opacity:1}
+}
 
-    .question{
-        padding: 10px;
-        font-weight: 600;
-        background-color: aqua;
-        border-radius: 10px;
-        /* display: block; */
-    /* }
-    .answers {
+@keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
 
-        background-color: coral;
+/* The Close Button */
+.close {
+    color: white;
+    float: right;
+    font-size: 34px;
+    margin: 10px;
+    font-weight: bold;
+}
 
-    } */ */
-    .question{
-        font-weight: 600;
-      }
-      .answers {
-          margin-bottom: 20px;
-      }
-    /* #quiz label{
-        display: inline;
-        margin: 10px;
-        
-    } */
-    #submit{
-        font-family: sans-serif;
-        font-size: 20px;
-        background-color: #297;
-        color: #fff;
-        border: 0px;
-        border-radius: 3px;
-        padding: 20px;
-        cursor: pointer;
-        margin-bottom: 20px;
-    }
-    #submit:hover{
-        background-color: #3a8;
-    }
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-header {
+    text-align: center;
+    margin: 10px;
+    border-radius: 10px;
+    padding: 1px 10px;
+    background-color: rgb(20,78,110);
+    color: white;
+}
+
+.modal-body {
+    text-align: center;
+    padding: 2px 16px;
+}
+
+.modal-content p span{
+    font-weight: bold;
+}
+
+.question{
+    font-weight: 600;
+    color: rgb(4, 32, 43);
+}
+
+.answers {
+    background-color: white;
+    border-radius: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    display:flex; 
+    flex-direction: row; 
+    justify-content: center; 
+    align-items: center;
+    min-width: none;
+    color: rgb(20,78,110);
+}
+.answers input{
+    margin: 10px;
+}
+.answers label{
+    display: block;
+    text-align: center;
+    margin: 10px;
+}
+#submit{
+    font-family: sans-serif;
+    font-size: 20px;
+    background-color: rgb(60, 119, 148);
+    color: #fff;
+    border: 0px;
+    border-radius: 3px;
+    padding: 10px;
+    cursor: pointer;
+    margin-bottom: 20px;
+
+}
+#submit:hover{
+    background-color: rgb(20,78,110);
+}
+
+.audio{
+    border-radius: 50%;
+    margin: 0;
+    height: 6vh;
+    width: 6vh;
+    color:white;
+    background-color: rgb(20,78,110);
+    border:0px;
+    position: absolute;
+    z-index: 2;
+    margin-top: 10px;
+    transform: translateX(-7px);
+
+}

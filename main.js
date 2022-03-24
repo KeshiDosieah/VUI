@@ -14,7 +14,10 @@ const utterances = [
     ["c", "c programming", "c programming language","c coding", "c code","programming c","coding c","code c"],
     ["c++", "c++ programming", "c++ programming language","c++ coding", "c++ code","programming c++","coding c++","code c++"],
     ["sql", "database management", "sql commands", "structured query language"],
-    ["quiz"]
+    ["quiz", "test", "assessment"],
+    ["quiz java, test java, assessment java", "java quiz", "java test", "java assessment"],
+    ["quiz sql, test sql, assessment sql", "sql quiz", "sql test", "sql assessment"],
+    ["submit"]
     
   ];
     
@@ -29,7 +32,10 @@ const answers = [
     ["You can find C programming learning resources on the right. Select one to get started.", "Here are some amazing C programming resources to get started.", "Learn C programming by clicking on one of the following resources."],
     ["You can find C++ programming learning resources on the right. Select one to get started.", "Here are some amazing C++ programming resources to get started.", "Learn C++ programming by clicking on one of the following resources."],
     ["You can find Structured Query Language resources on the right. Select one to get started.", "Here are some amazing Structured Query Language resources to get started.", "Learn Structured Query Language programming by clicking on one of the following resources."],
-    ["aila quiz"]
+    ["Test your knowledge on the topics displayed on the right. Select one to get started.", "Attempt a quiz and find your level of understanding on the selected topics on the right."],
+    ["Here you go. Answer all java related questions and submit your answers using the mic, chat or submit button.", "You can find a list of java questions on the right. Use the mic, chat or submit button to submit your answer."],
+    ["Here you go. Answer all SQL related questions and submit your answers using the mic, chat or submit button.", "You can find a list of SQL questions on the right. Use the mic, chat or submit button to submit your answer."],
+    ["You have successfully submitted your quiz"]
 
   ];
 
@@ -46,6 +52,11 @@ const programming=[{"name": "Java", "image":"java.png", "name1":"Javatpoint","li
                    {"name": "C++", "image":"cplus.png", "name1": "Programiz", "link1":"https://www.programiz.com/cpp-programming", "name2":"LearnCpp", "link2": "https://www.learncpp.com/", "video":"https://www.youtube-nocookie.com/embed/8jLOx1hD3_o", "desc":"C++ is a powerful general-purpose programming language. It can be used to develop operating systems, browsers, games, and so on. C++ supports different ways of programming like procedural, object-oriented, functional, and so on. This makes C++ powerful as well as flexible."},
                    {"name": "SQL", "image":"sql.png", "name1": "Tutorialspoint", "link1":"https://www.tutorialspoint.com/sql/index.htm", "name2":"W3Schools", "link2": "https://www.w3schools.com/sql/", "video":"https://www.youtube-nocookie.com/embed/HXV3zeQKqGY", "desc":"SQL (Structured Query Language) is a domain-specific language used in programming and designed for managing data held in a relational database management system (RDBMS), or for stream processing. It is particularly useful in handling structured data, i.e. data incorporating relations among entities and variables."}
                   ];
+
+const quizbuttons = [
+  {"name": "Java", "image":"java.png", "array": "javaQuiz"},
+  {"name": "SQL", "image":"sql.png", "array": "sqlQuiz"}
+];
 
 let speech = new SpeechSynthesisUtterance();
 speech.volume=1;
@@ -67,6 +78,9 @@ mic.addEventListener("click", function(){
 })
 
 recognition.onresult=function(e){
+  mic.style.background="rgb(20,78,110)";
+  icon.className = 'fa-solid fa-microphone fa-2xl fa-duotone';
+  mic.style.color = "white";
     let resultIndex = e.resultIndex;
     let transcript = e.results[resultIndex][0].transcript;
     output(transcript);
@@ -74,6 +88,8 @@ recognition.onresult=function(e){
 }
 
 recognition.onend=function(){
+  console.log("ends....");
+  let icon = document.querySelector("#icon");
     mic.style.background="rgb(20,78,110)";
     icon.className = 'fa-solid fa-microphone fa-2xl fa-duotone';
     mic.style.color = "white";
@@ -110,6 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .replace(/i need help with/g, "")
       .replace(/help with/g, "")
       .replace(/help in/g, "")
+      .replace(/i want to try /g, "")
       ;
 
     if (compare(utterances, answers, text)) {
@@ -126,6 +143,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   
   function compare(utterancesArray, answersArray, string) {
+    //     const info = document.querySelector(".info");
+    // info.innerHTML ="";
     let reply;
     let replyFound = false;
     let index = 0;
@@ -228,6 +247,8 @@ document.addEventListener("DOMContentLoaded", () => {
     botDiv.appendChild(botText);
     botDiv.appendChild(bottimetext);
     messagesContainer.appendChild(botDiv);
+    speech.text = product;
+    window.speechSynthesis.speak(speech);
   }
 
   function displayInfo(x){
@@ -256,23 +277,16 @@ document.addEventListener("DOMContentLoaded", () => {
         displayLink(programming[5]);
         break;
       case 9:
-        const info = document.querySelector(".info");
-        let quiz = document.createElement("div");
-        quiz.id = "quiz";
-        quiz.innerHTML = "";
-        let quizbtn = document.createElement("button");
-        quizbtn.id = "submit";
-        quizbtn.innerHTML = "submit";
-        let result = document.createElement("div");
-        result.id = "results";
-        info.appendChild(quiz);
-        info.appendChild(quizbtn);
-        info.appendChild(result);
-        var quizContainer = document.getElementById('quiz');
-        var resultsContainer = document.getElementById('results');
-        var submitButton = document.getElementById('submit');
-        generateQuiz(myQuestions, quizContainer, resultsContainer, submitButton);
+        displayquizbuttons(quizbuttons);
         break;
+      case 10:
+        displayQuiz(javaQuiz);
+        break;
+      case 11:
+        displayQuiz(sqlQuiz);
+        break;
+      // case 12:
+
     }
   }
   
@@ -292,6 +306,36 @@ document.addEventListener("DOMContentLoaded", () => {
       name.onclick = function(){
         addChatEntryUser(element.name);
         displayLink(element);};
+      lang.appendChild(name);
+      slot.appendChild(img);
+      slot.appendChild(lang);
+      container.appendChild(slot);
+    });
+    info.appendChild(container);
+  }
+
+  function displayquizbuttons(buttonArray){
+    const info = document.querySelector(".info");
+    let container = document.createElement("div");
+    container.className = "programButton";
+    buttonArray.forEach(element => {
+      let slot =  document.createElement("div");
+      slot.className = "slot";
+      let img = document.createElement("img");
+      img.src = element.image;  
+      let lang = document.createElement("div");
+      lang.className = "langName";
+      let name = document.createElement("button");
+      name.innerHTML = element.name;
+      name.onclick = function(){
+        if (element.array == "javaQuiz"){
+          addChatEntryUser(element.name);
+          displayQuiz(javaQuiz);
+        }else if (element.array == "sqlQuiz"){
+          addChatEntryUser(element.name);
+          displayQuiz(sqlQuiz);
+        }
+      };
       lang.appendChild(name);
       slot.appendChild(img);
       slot.appendChild(lang);
@@ -393,26 +437,109 @@ window.onclick = function(event) {
 }
 
 
-var myQuestions = [
+var javaQuiz = [
 	{
-		question: "What is 10/2?",
+		question: "What is inheritance?",
 		answers: {
-			a: '3',
-			b: '5',
-			c: '115'
+			A: 'It is the process where one object acquires the properties of another.',
+			B: 'Inheritance is the ability of an object to take on many forms.',
+			C: 'Inheritance is a technique to define different methods of same type'
 		},
-		correctAnswer: 'b'
+		correctAnswer: 'A'
 	},
 	{
-		question: "What is 30/3?",
+		question: "Can be constructor be made final?",
 		answers: {
-			a: '3',
-			b: '5',
-			c: '10'
+			A: 'True',
+			B: 'False'
 		},
-		correctAnswer: 'c'
+		correctAnswer: 'B'
+	},
+  {
+		question: "Which method can be used to find the length of a string?",
+		answers: {
+			A: 'len()',
+			B: 'getSize()',
+			C: 'getLength()',
+      D: 'length()'
+		},
+		correctAnswer: 'D'
+	},
+  {
+		question: "Which will legally declare, construct, and initialize an array?",
+		answers: {
+			A: 'int [] myList = {"1", "2", "3"};',
+			B: 'int [] myList = (5, 8, 2)',
+			C: 'int myList [] [] = {4,9,7,0};',
+      D: 'int myList [] = {4, 3, 7};'
+		},
+		correctAnswer: 'D'
+	},
+  {
+		question: "Which one is a valid declaration of a boolean?",
+		answers: {
+			A: 'boolean b1 = 0;',
+			B: 'boolean b5 = no;',
+			C: 'boolean b3 = false;',
+      D: 'boolean b4 = Boolean.false();'
+		},
+		correctAnswer: 'C'
 	}
 ];
+
+var sqlQuiz = [
+	{
+		question: "Which of the following is not true about modifying rows in a table?",
+		answers: {
+			A: 'Existing rows in a table are modified using the UPDATE statement.',
+			B: 'You can update more than one row at a time.',
+			C: 'All the rows in a table are modified if you omit the WHERE clause.',
+      D: 'None of the above'
+		},
+		correctAnswer: 'D'
+	},
+	{
+		question: "Which of the following code will successfully delete the table LOCATIONS from the database?",
+		answers: {
+			A: 'DROP TABLE locations;',
+			B: 'DELETE TABLE locations;',
+      c: 'TRUNCATE TABLE locations;',
+      D: 'None of the above.'
+		},
+		correctAnswer: 'A'
+	},
+  {
+		question: "The SQL WHERE clause:",
+		answers: {
+			A: 'limits the column data that are returned.',
+			B: 'limits the row data are returned.',
+			C: 'Both A and B are correct.',
+      D: 'Neither A nor B are correct.'
+		},
+		correctAnswer: 'B'
+	},
+  {
+		question: "	Which one of the following sorts rows in SQL?",
+		answers: {
+			A: 'SORT BY',
+			B: 'ALIGN BY',
+			C: 'ORDER BY',
+      D: 'GROUP BY'
+		},
+		correctAnswer: 'C'
+	},
+  {
+		question: "Which of the following is the correct order of keywords for SQL SELECT statements?",
+		answers: {
+			A: 'SELECT, FROM, WHERE',
+			B: 'FROM, WHERE, SELECT',
+			C: 'WHERE, FROM, SELECT',
+      D: 'SELECT, WHERE, FROM'
+		},
+		correctAnswer: 'A'
+	}
+];
+
 
 function generateQuiz(questions, quizContainer, resultsContainer, submitButton){
 
@@ -431,11 +558,12 @@ function generateQuiz(questions, quizContainer, resultsContainer, submitButton){
 
 			// ...add an html radio button
 			answers.push(
-				'<label>'
-					+ '<input type="radio" name="question'+i+'" value="'+letter+'">'
-					+ letter + ': '
-					+ questions[i].answers[letter]
-				+ '</label>'
+        `<label>
+        <input type="radio" name="question${i}" value="${letter}">
+        ${letter}.
+        ${questions[i].answers[letter]}
+      </label>`
+        //'<input type="radio" name="question'+i+'" value="'+ letter +'"><label for="'+letter+'">'+ letter + ' : ' + questions[i].answers[letter] +'</label>'
 			);
 		}
 
@@ -470,17 +598,29 @@ function generateQuiz(questions, quizContainer, resultsContainer, submitButton){
 			numCorrect++;
 			
 			// color the answers green
-			answerContainers[i].style.color = 'lightgreen';
+      answerContainers[i].style.background = 'rgb(77, 214, 127)';
 		}
 		// if answer is wrong or blank
 		else{
 			// color the answers red
-			answerContainers[i].style.color = 'red';
+			answerContainers[i].style.background = 'rgb(219, 66, 66)';
 		}
 	}
 
-	// show number of correct answers out of total
-	resultsContainer.innerHTML = numCorrect + ' out of ' + questions.length;
+  if (numCorrect >3){
+    addChatEntryBot("Congratulations. You got " + numCorrect + ' out of ' + questions.length + ". Try learning another language from the list.");
+    displaybuttons(programming);
+  }else{
+    addChatEntryBot("Oh no. You got only " + numCorrect + ' out of ' + questions.length + ". Try these following resources to get better");
+    if (questions === javaQuiz){
+      displayLink(programming[0]);
+    }else if (questions === sqlQuiz){
+      displayLink(programming[5]);
+    }
+    
+  }
+	// // show number of correct answers out of total
+	// resultsContainer.innerHTML = numCorrect + ' out of ' + questions.length;
 	}
 
 	// show the questions
@@ -488,6 +628,50 @@ function generateQuiz(questions, quizContainer, resultsContainer, submitButton){
 
 	// when user clicks submit, show results
 	submitButton.onclick = function(){
+    addChatEntryUser("submit");
+    addChatEntryBot("You have successfully submitted the quiz");
 		showResults(questions, quizContainer, resultsContainer);
 	}
+
+  recognition.onresult=function(e){
+    mic.style.background="rgb(20,78,110)";
+    icon.className = 'fa-solid fa-microphone fa-2xl fa-duotone';
+    mic.style.color = "white";
+    let resultIndex = e.resultIndex;
+    let transcript = e.results[resultIndex][0].transcript;
+    if (transcript == "submit"){
+      addChatEntryUser("submit");
+      addChatEntryBot("You have successfully submitted the quiz");
+      showResults(questions, quizContainer, resultsContainer);
+    }
+}
+const inputField = document.getElementById("input");
+inputField.addEventListener("keydown", (e) => {
+  if ((e.code === "Enter") || (inputField.value == "submit")){
+    window.speechSynthesis.cancel();
+    let input = inputField.value;
+      inputField.value = "";
+      showResults(questions, quizContainer, resultsContainer);
+  }
+});
+}
+
+function displayQuiz(questions){
+  const info = document.querySelector(".info");
+  info.innerHTML = "";
+        let quiz = document.createElement("div");
+        quiz.id = "quiz";
+        quiz.innerHTML = "";
+        let quizbtn = document.createElement("button");
+        quizbtn.id = "submit";
+        quizbtn.innerHTML = "Submit";
+        let result = document.createElement("div");
+        result.id = "results";
+        info.appendChild(quiz);
+        info.appendChild(quizbtn);
+        info.appendChild(result);
+        var quizContainer = document.getElementById('quiz');
+        var resultsContainer = document.getElementById('results');
+        var submitButton = document.getElementById('submit');
+        generateQuiz(questions, quizContainer, resultsContainer, submitButton);
 }
