@@ -17,7 +17,8 @@ const utterances = [
     ["quiz", "test", "assessment"],
     ["quiz java, test java, assessment java", "java quiz", "java test", "java assessment"],
     ["quiz sql, test sql, assessment sql", "sql quiz", "sql test", "sql assessment"],
-    ["submit"]
+    ["submit"],
+    ["referencing", "reference", "citation", "cite"]
     
   ];
     
@@ -35,7 +36,8 @@ const answers = [
     ["Test your knowledge on the topics displayed on the right. Select one to get started.", "Attempt a quiz and find your level of understanding on the selected topics on the right."],
     ["Here you go. Answer all java related questions and submit your answers using the mic, chat or submit button.", "You can find a list of java questions on the right. Use the mic, chat or submit button to submit your answer."],
     ["Here you go. Answer all SQL related questions and submit your answers using the mic, chat or submit button.", "You can find a list of SQL questions on the right. Use the mic, chat or submit button to submit your answer."],
-    ["You have successfully submitted your quiz"]
+    ["You have successfully submitted your quiz"],
+    ["Select the type of source you need help referencing.", "Which source type do you wish to reference? Select one on the right."]
 
   ];
 
@@ -52,7 +54,12 @@ const programming=[{"name": "Java", "image":"java.png", "name1":"Javatpoint","li
                    {"name": "C++", "image":"cplus.png", "name1": "Programiz", "link1":"https://www.programiz.com/cpp-programming", "name2":"LearnCpp", "link2": "https://www.learncpp.com/", "video":"https://www.youtube-nocookie.com/embed/8jLOx1hD3_o", "desc":"C++ is a powerful general-purpose programming language. It can be used to develop operating systems, browsers, games, and so on. C++ supports different ways of programming like procedural, object-oriented, functional, and so on. This makes C++ powerful as well as flexible."},
                    {"name": "SQL", "image":"sql.png", "name1": "Tutorialspoint", "link1":"https://www.tutorialspoint.com/sql/index.htm", "name2":"W3Schools", "link2": "https://www.w3schools.com/sql/", "video":"https://www.youtube-nocookie.com/embed/HXV3zeQKqGY", "desc":"SQL (Structured Query Language) is a domain-specific language used in programming and designed for managing data held in a relational database management system (RDBMS), or for stream processing. It is particularly useful in handling structured data, i.e. data incorporating relations among entities and variables."}
                   ];
+const referencing = [
+  {"name":"Book", "image":"book.png", "order":'Author/editor<br>Year of publication (in round brackets)<br>Title (in italics)<br>Edition (edition number if not the first edn and/or rev. edn)<br>Place of publication: Publisher<br> Series and volume number (where relevant)', "infoimg":"bookinfo.png", "link":"https://www.citethemrightonline.com/books/printed-books"},
+  {"name":"Web page", "image":"webpage.png", "order":'Organisation <br>Year that the site was published/last updated (in round brackets)<br>Title of web page (in italics)<br>Available at: URL (Accessed: date)', "infoimg":"webpageinfo.png","link":"https://www.citethemrightonline.com/digital-internet/the-internet/web-pages-with-organisations-as-authors"},
+  {"name":"Journal", "image":"journal.png", "order":'Author (surname followed by initials)<br>Year of publication (in round brackets)<br>Title of article (in single quotation marks)<br>Title of journal (in italics – capitalise first letter of each word in title, except for linking words such as and, of, the, for)<br>Issue information: volume (unbracketed) and, where applicable, part number, month or season (all in round brackets)<br>Page reference (if available) or article number', "infoimg":"journalinfo.png", "link":"https://www.citethemrightonline.com/journals/journal-articles"}
 
+];
 const quizbuttons = [
   {"name": "Java", "image":"java.png", "array": "javaQuiz"},
   {"name": "SQL", "image":"sql.png", "array": "sqlQuiz"}
@@ -285,7 +292,9 @@ document.addEventListener("DOMContentLoaded", () => {
       case 11:
         displayQuiz(sqlQuiz);
         break;
-      // case 12:
+      case 13:
+        displayrefbuttons(referencing);
+        break;
 
     }
   }
@@ -312,6 +321,32 @@ document.addEventListener("DOMContentLoaded", () => {
       container.appendChild(slot);
     });
     info.appendChild(container);
+  }
+
+  function displayrefbuttons(buttonArray){
+    const info = document.querySelector(".info");
+    let container = document.createElement("div");
+    container.className = "programButton";
+    buttonArray.forEach(element => {
+      let slot =  document.createElement("div");
+      slot.className = "slot";
+      let img = document.createElement("img");
+      img.src = element.image;  
+      let lang = document.createElement("div");
+      lang.className = "langName";
+      let name = document.createElement("button");
+      name.innerHTML = element.name;
+      name.onclick = function(){
+        addChatEntryUser(element.name);
+        displayref(element);
+      };
+      lang.appendChild(name);
+      slot.appendChild(img);
+      slot.appendChild(lang);
+      container.appendChild(slot);
+    });
+    info.appendChild(container);
+    
   }
 
   function displayquizbuttons(buttonArray){
@@ -344,7 +379,32 @@ document.addEventListener("DOMContentLoaded", () => {
     info.appendChild(container);
   }
 
-
+  function displayref(elem){
+    const info = document.querySelector(".info");
+    info.innerHTML = "";
+    let img = document.createElement("img");
+    img.src = elem.image;
+    let infoimg = document.createElement("img");
+    infoimg.src = elem.infoimg;
+    infoimg.className = "infoimg";
+    let displayDiv = document.createElement("div");
+    displayDiv.className = "displayDiv";
+    let title = document.createElement("h1");
+    title.innerHTML = 'Reference a '+ elem.name;
+    let desc = document.createElement("p");
+    desc.innerHTML = '<span> Citation Order: </span><br>' + elem.order;
+    let button1 = document.createElement("button");
+    button1.innerHTML = "Click for more";
+    button1.className ="refbutton";
+    button1.onclick = function(){
+      redirect(elem.link, "Citethemright");};
+    displayDiv.appendChild(img);
+    displayDiv.appendChild(desc);
+    info.appendChild(title);
+    info.appendChild(displayDiv);
+    info.appendChild(infoimg);
+    info.appendChild(button1);
+  }
   
   function displayLink(elem){
     const info = document.querySelector(".info");
@@ -403,7 +463,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let product = "Redirecting to " + name;
     addChatEntryBot(product);
     speech.text = product;
-    window.speechSynthesis.speak(speech);
+    // window.speechSynthesis.speak(speech);
     setTimeout(()=>{
       window.open(url);
     }, 2000);
@@ -675,3 +735,4 @@ function displayQuiz(questions){
         var submitButton = document.getElementById('submit');
         generateQuiz(questions, quizContainer, resultsContainer, submitButton);
 }
+
