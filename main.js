@@ -18,7 +18,13 @@ const utterances = [
     ["quiz java, test java, assessment java", "java quiz", "java test", "java assessment"],
     ["quiz sql, test sql, assessment sql", "sql quiz", "sql test", "sql assessment"],
     ["submit"],
-    ["referencing", "reference", "citation", "cite"]
+    ["referencing", "reference", "references", "citation", "cite"],
+    ["book", "book reference", "book references", "reference book", "cite book", "citation book", "book citation"],
+    ["webpage", "webpage reference", "webpage references", "reference webpage", "cite webpage", "citation webpage", "webpage citation"],
+    ["journal", "journal reference", "journal references", "reference journal", "cite journal", "citation journal", "journal citation"],
+    ["help", "guide", "assist", "assistance", "commands", "commands available", "help me", "assist me"],
+    ["quiz python, test python, assessment python", "python quiz", "python test", "python assessment"],
+    ["monday"]
     
   ];
     
@@ -37,7 +43,13 @@ const answers = [
     ["Here you go. Answer all java related questions and submit your answers using the mic, chat or submit button.", "You can find a list of java questions on the right. Use the mic, chat or submit button to submit your answer."],
     ["Here you go. Answer all SQL related questions and submit your answers using the mic, chat or submit button.", "You can find a list of SQL questions on the right. Use the mic, chat or submit button to submit your answer."],
     ["You have successfully submitted your quiz"],
-    ["Select the type of source you need help referencing.", "Which source type do you wish to reference? Select one on the right."]
+    ["Select the type of source you need help referencing.", "Which source type do you wish to reference? Select one on the right."],
+    ["Here you go. Apply the following to cite your book", "The following can help you to reference a book", "You can cite your book as per the following"],
+    ["Here you go. Apply the following to cite your webpage", "The following can help you to reference a webpage", "You can cite your webpage as per the following"],
+    ["Here you go. Apply the following to cite your journal", "The following can help you to reference a journal", "You can cite your journal as per the following"],
+    ["Here's what I can do.", "You can see the available commands I can understand", "Here are the areas I can help you with."],
+    ["Here you go. Answer all python related questions and submit your answers using the mic, chat or submit button.", "You can find a list of SQL questions on the right. Use the mic, chat or submit button to submit your answer."],
+    ["Here's your schedule for monday"]
 
   ];
 
@@ -62,8 +74,12 @@ const referencing = [
 ];
 const quizbuttons = [
   {"name": "Java", "image":"java.png", "array": "javaQuiz"},
-  {"name": "SQL", "image":"sql.png", "array": "sqlQuiz"}
+  {"name": "SQL", "image":"sql.png", "array": "sqlQuiz"},
+  {"name": "Python", "image":"python.png", "array": "pyQuiz"}
 ];
+
+const schedule = [{"day": "Monday","class":"CST3140 at 11:30"},
+                  {"day": "Tuesday"},{"day": "Wednesday"},{"day": "Thursday"},{"day": "Friday"}];
 
 let speech = new SpeechSynthesisUtterance();
 speech.volume=1;
@@ -82,6 +98,8 @@ mic.addEventListener("click", function(){
     mic.style.color = "rgb(20,78,110)";
     recognition.start();
     console.log("Activated");
+    var audio = new Audio('start.mp3');
+    audio.play();
 })
 
 recognition.onresult=function(e){
@@ -100,6 +118,8 @@ recognition.onend=function(){
     mic.style.background="rgb(20,78,110)";
     icon.className = 'fa-solid fa-microphone fa-2xl fa-duotone';
     mic.style.color = "white";
+    var audio = new Audio('start.mp3');
+    audio.play();
 }
 
 const inputField = document.getElementById("input");
@@ -134,6 +154,10 @@ document.addEventListener("DOMContentLoaded", () => {
       .replace(/help with/g, "")
       .replace(/help in/g, "")
       .replace(/i want to try /g, "")
+      .replace(/how to /g,"")
+      .replace(/attempt/g,"")
+      .replace(/try/g,"")
+      .replace(/how can you/g, "")
       ;
 
     if (compare(utterances, answers, text)) {
@@ -146,6 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     speech.text = product;
     addChatEntry(input, product);
+    displayInfo(index(utterances, answers, text));
     window.speechSynthesis.speak(speech);
   }
   
@@ -169,8 +194,32 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
       }
     }
-    displayInfo(index);
+    // displayInfo(index);
     return reply;
+  }
+
+  function index(utterancesArray, answersArray, string) {
+    //     const info = document.querySelector(".info");
+    // info.innerHTML ="";
+    let reply;
+    let replyFound = false;
+    let index = 0;
+    for (let x = 0; x < utterancesArray.length; x++) {
+      for (let y = 0; y < utterancesArray[x].length; y++) {
+        if ((utterancesArray[x][y] == string) || utterancesArray[x][y].includes(string)){
+          let replies = answersArray[x];
+          reply = replies[Math.floor(Math.random() * replies.length)];
+          replyFound = true;
+          index = x;
+          break;
+        }
+      }
+      if (replyFound) {
+        break;
+      }
+    }
+    // displayInfo(index);
+    return index;
   }
 
   
@@ -295,7 +344,34 @@ document.addEventListener("DOMContentLoaded", () => {
       case 13:
         displayrefbuttons(referencing);
         break;
+      case 14:
+        displayref(referencing[0]);
+        break;
+      case 15:
+        displayref(referencing[1]);
+        break; 
+      case 16:
+        displayref(referencing[2]);
+        break;
+      case 17:
+        modal.style.display = "block";
+        break;
+      case 18:
+        displayQuiz(pyQuiz);
+        break;
+      case 19:
+        setTimeout(function(){
+          if (schedule[0].class != ""){
+          //speech.text = "You have" + schedule[0].class;
+          addChatEntryBot("You have " + schedule[0].class);
+          }else{
+          addChatEntryBot("You have no class on Monday");
+          }
+        }, 2000); 
 
+        //window.speechSynthesis.speak(speech);
+        //displayschedule(schedule[0]);
+        break;
     }
   }
   
@@ -369,6 +445,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }else if (element.array == "sqlQuiz"){
           addChatEntryUser(element.name);
           displayQuiz(sqlQuiz);
+        }else if (element.array == "pyQuiz"){
+          addChatEntryUser(element.name);
+          displayQuiz(pyQuiz);
         }
       };
       lang.appendChild(name);
@@ -407,8 +486,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   
   function displayLink(elem){
-    const info = document.querySelector(".info");
-    info.innerHTML = "";
+     const info = document.querySelector(".info");
+    // info.innerHTML = "";
     let title = document.createElement("h1");
     title.innerHTML = elem.name;
     let displayDiv = document.createElement("div");
@@ -463,12 +542,17 @@ document.addEventListener("DOMContentLoaded", () => {
     let product = "Redirecting to " + name;
     addChatEntryBot(product);
     speech.text = product;
-    // window.speechSynthesis.speak(speech);
+    window.speechSynthesis.speak(speech);
     setTimeout(()=>{
       window.open(url);
     }, 2000);
     
   }
+function displayschedule(elem){
+  addChatEntryBot(elem.class);
+    // speech.text = elem.class;
+    // window.speechSynthesis.speak(speech);
+}
 
 // Get the modal
 var modal = document.getElementById("myModal");
@@ -600,6 +684,58 @@ var sqlQuiz = [
 	}
 ];
 
+var pyQuiz = [
+	{
+		question: "What will be the value of the following Python expression? 4 + 3 % 5",
+		answers: {
+			A: '7',
+			B: '2',
+			C: '4',
+      D: '1'
+		},
+		correctAnswer: 'A'
+	},
+	{
+		question: "Which keyword is used for function in Python language?",
+		answers: {
+			A: 'Function',
+			B: 'Def',
+      c: 'Fun',
+      D: 'Define'
+		},
+		correctAnswer: 'B'
+	},
+  {
+		question: "To add a new element to a list we use which Python command?",
+		answers: {
+			A: 'list1.addEnd(5)',
+			B: 'list1.addLast(5)',
+			C: 'list1.append(5)',
+      D: 'list1.add(5)'
+		},
+		correctAnswer: 'C'
+	},
+  {
+		question: " What will be the output of the following code snippet? a = [1,2] print(a*3)",
+		answers: {
+			A: 'Error',
+			B: '[1,2]',
+			C: '[1,2,1,2]',
+      D: '[1,2,1,2,1,2]'
+		},
+		correctAnswer: 'D'
+	},
+  {
+		question: "What keyword is used in Python to raise exceptions?",
+		answers: {
+			A: 'raise',
+			B: 'try',
+			C: 'goto',
+      D: 'except'
+		},
+		correctAnswer: 'A'
+	}
+];
 
 function generateQuiz(questions, quizContainer, resultsContainer, submitButton){
 
@@ -668,14 +804,23 @@ function generateQuiz(questions, quizContainer, resultsContainer, submitButton){
 	}
 
   if (numCorrect >3){
-    addChatEntryBot("Congratulations. You got " + numCorrect + ' out of ' + questions.length + ". Try learning another language from the list.");
+    let msg = "Congratulations. You got " + numCorrect + ' out of ' + questions.length + ". Try learning another language.";
+    addChatEntryBot(msg);
+    speech.text = msg;
+    
+    window.speechSynthesis.speak(speech);
     displaybuttons(programming);
   }else{
-    addChatEntryBot("Oh no. You got only " + numCorrect + ' out of ' + questions.length + ". Try these following resources to get better");
+    let msg = "Oh no. You got only " + numCorrect + ' out of ' + questions.length + ". Learn the language again.";
+    addChatEntryBot(msg);
+    speech.text = msg;
+    window.speechSynthesis.speak(speech);
     if (questions === javaQuiz){
       displayLink(programming[0]);
     }else if (questions === sqlQuiz){
       displayLink(programming[5]);
+    }else if (questions === pyQuiz){
+      displayLink(programming[1]);
     }
     
   }
@@ -707,7 +852,7 @@ function generateQuiz(questions, quizContainer, resultsContainer, submitButton){
 }
 const inputField = document.getElementById("input");
 inputField.addEventListener("keydown", (e) => {
-  if ((e.code === "Enter") || (inputField.value == "submit")){
+  if ((e.code === "Enter") && (inputField.value == "submit")){
     window.speechSynthesis.cancel();
     let input = inputField.value;
       inputField.value = "";

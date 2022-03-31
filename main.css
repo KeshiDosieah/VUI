@@ -441,6 +441,23 @@ input{
     font-weight: bold;
 }
 
+.modal-body table{
+    border: 1px solid;
+    margin: 20px;
+    
+}
+
+.modal-body table th{
+    padding: 10px;
+    border: 1px solid;
+    background-color: rgb(20,78,110);
+    color: white;
+}
+
+.modal-body table td{
+    padding: 10px;
+    border: 1px solid;
+}
 .question{
     font-weight: 600;
     color: rgb(4, 32, 43);
